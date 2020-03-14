@@ -35,6 +35,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+
+// for testing
+var (
+	getUIDAndGID = GetUIDAndGIDFromString
+)
+
 const (
 	pathSeparator = "/"
 )
@@ -343,7 +349,7 @@ func GetUserGroup(chownStr string, env []string) (int64, int64, error) {
 	if err != nil {
 		return -1, -1, err
 	}
-	uid32, gid32, err := GetUIDAndGIDFromString(chown, true)
+	uid32, gid32, err := getUIDAndGID(chown, true)
 	if err != nil {
 		return -1, -1, err
 	}

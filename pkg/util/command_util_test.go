@@ -517,6 +517,9 @@ func TestGetUserGroup(t *testing.T) {
 	}
 	for _, tc := range tests {
 		t.Run(tc.description, func(t *testing.T) {
+			original := getUIDAndGID
+			defer func() { getUIDAndGID = original }()
+			getUIDAndGID = tc.mock
 			uid, gid, err := GetUserGroup(tc.chown, tc.env)
 			testutil.CheckErrorAndDeepEqual(t, tc.shdErr, err, uid, tc.expectedU)
 			testutil.CheckErrorAndDeepEqual(t, tc.shdErr, err, gid, tc.expectedG)

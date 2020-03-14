@@ -32,11 +32,6 @@ import (
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 )
 
-// for testing
-var (
-	getUIDAndGID = util.GetUIDAndGIDFromString
-)
-
 type CopyCommand struct {
 	BaseCommand
 	cmd           *instructions.CopyCommand
