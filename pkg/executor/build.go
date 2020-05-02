@@ -348,10 +348,30 @@ func (s *stageBuilder) build() error {
 
 		logrus.Info(command.String())
 
+		// Dani hack
+		nf, _ := snapshot.InitNotifier(config.RootDir)
+		done := make(chan bool)
+		go snapshot.Start(nf, done)
+		// Dani hack
+
 		if err := command.ExecuteCommand(&s.cf.Config, s.args); err != nil {
 			return errors.Wrap(err, "failed to execute command")
 		}
-		files = command.FilesToSnapshot()
+		// dani hack
+		done<-true
+		// commented out original code
+		//files = command.FilesToSnapshot()
+		files = make([]string, len(nf.EventsLog()))
+
+		i := 0
+		for k := range nf.EventsLog() {
+			files[i] = k
+			i++
+		}
+		nf.Close()
+		logrus.Infof("Files to snapshot, len=%d", len(files))
+
+		// end of hack
 		timing.DefaultRun.Stop(t)
 
 		if !s.shouldTakeSnapshot(index, files) {
